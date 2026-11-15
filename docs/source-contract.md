@@ -4,6 +4,8 @@
 
 ## 收件器扩展接口
 
+coverage指“至少一份当前有效证书的完整附件确实覆盖该车型配置”，不是单独某证书的型号包含关系。suspended候选仍需保存其适用范围与状态证据，但不能使coverage成为covered；尚未闭合且可能影响判断的候选令结论为unknown。明确排除和状态无效的依据都应可回查。
+
 现有 `src/intake.mjs` 导出 `preview(source, store)`，只做预览。收件器入口为新增的 `collect(source, store)`，由调用方负责创建和关闭来源及 Inbox。`npm run acceptance` 调用这一入口。返回的 `records` 是可正式交付资料，不把未确认片段放进该集合；特殊业务的 pending 和 diagnostics 独立返回。原始证据通过 Inbox 保存，正式记录应含证据引用。接口不规定内部架构，允许增加模块和持久表，但不能移除原预览或更改来源语义。
 
 ## 可观察边界
