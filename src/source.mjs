@@ -7,6 +7,7 @@ export async function fixture(scenario = 'normal') {
     const url = new URL(request.url, 'http://source');
     requests.push(url.pathname + url.search);
     if (url.pathname === '/search') {
+      if (scenario === 'empty') return json(response, 200, { candidates: [], next: null });
       const page = url.searchParams.get('page') || '1';
       return json(response, 200, { candidates: page === '1' ? ['C-101'] : ['C-102'],
         next: page === '1' ? '/search?page=2' : null });
@@ -25,7 +26,8 @@ export async function fixture(scenario = 'normal') {
       if (url.searchParams.get('revision') !== revision) return json(response, 409, { revision });
       if (scenario === 'missing' && url.pathname.endsWith('/b')) return json(response, 503, { retry: true });
       const scope = url.pathname.endsWith('/a')
-        ? { models: ['E-9'], excludeConfigurations: [{ battery: 'B-48' }] }
+        ? { models: ['E-9'],
+          excludeConfigurations: scenario === 'wildcard' ? [{}] : [{ battery: 'B-48' }] }
         : { models: ['E-12'], excludeConfigurations: [] };
       return json(response, 200, { revision, scope });
     }
